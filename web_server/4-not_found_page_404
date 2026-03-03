@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Customizing a 404-error_page
+
+sudo apt-get update
+sudo apt-get install -y nginx
+
+echo "Holberton School for the win!" | sudo tee /var/www/html/index.html
+
+# Performing a "moved permanently redirection" (301)
+
+string_for_replacement="server_name _;\n\trewrite ^/redirect_me https://youtu.be/dQw4w9WgXcQ?si=54Fqf98_gBlmghYn permanent;"
+
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+
+# Creating a 404 Custom error page
+
+echo "404 Page can not be found Ceci n'est pas une page |  Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var/www/html;\n\t\tinternal;\n\t}"
+
+sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+# restart nginx
+sudo service nginx restart
